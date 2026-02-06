@@ -4,6 +4,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
   },
+  transpilePackages: ['lucide-react'],
 }
 
 module.exports = nextConfig

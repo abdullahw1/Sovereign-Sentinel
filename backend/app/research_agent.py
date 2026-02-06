@@ -26,6 +26,133 @@ class ResearchAgent:
             raise ImportError("Composio is not installed. Install with: pip install composio-core")
         self.client = ComposioClient(api_key=composio_api_key)
         self.toolset = ComposioToolset()
+        self.api_key = composio_api_key
+    
+    def get_available_connections(self, entity_id: Optional[str] = None) -> List[Dict]:
+        """
+        Get all available connections for the entity.
+        
+        Args:
+            entity_id: Optional entity ID. If None, uses default entity.
+            
+        Returns:
+            List of connection dictionaries
+        """
+        try:
+            connections_list = []
+            
+            if entity_id:
+                try:
+                    entity = self.client.entities.get(entity_id=entity_id)
+                    connections = entity.get_connections()
+                except:
+                    # Try alternative method
+                    connections = self.client.entities.get_connections(entity_id=entity_id)
+            else:
+                # Get default entity connections
+                try:
+                    entities = self.client.entities.list()
+                    if entities and len(entities) > 0:
+                        entity = entities[0]
+                        connections = entity.get_connections()
+                    else:
+                        return []
+                except:
+                    return []
+            
+            # Convert connections to dict format
+            for conn in connections:
+                try:
+                    conn_dict = {
+                        "id": getattr(conn, 'id', getattr(conn, 'connection_id', None)),
+                        "app": getattr(conn, 'app', getattr(conn, 'app_name', 'unknown')),
+                        "status": getattr(conn, 'status', 'unknown'),
+                    }
+                    
+                    # Try to get created_at
+                    if hasattr(conn, 'created_at'):
+                        if conn.created_at:
+                            conn_dict["created_at"] = conn.created_at.isoformat() if hasattr(conn.created_at, 'isoformat') else str(conn.created_at)
+                    
+                    connections_list.append(conn_dict)
+                except Exception as e:
+                    logger.warning(f"Error processing connection: {e}")
+                    continue
+            
+            return connections_list
+        except Exception as e:
+            logger.error(f"Error getting connections: {e}")
+            return []
+    
+    async def create_connection(
+        self,
+        app_name: str,
+        entity_id: str,
+        redirect_url: Optional[str] = None
+    ) -> Dict:
+        """
+        Create a new OAuth connection for an app.
+        
+        Args:
+            app_name: App name ("xero", "quickbooks", "stripe")
+            entity_id: Entity ID (external user ID)
+            redirect_url: Optional redirect URL for OAuth
+            
+        Returns:
+            Connection dictionary with auth URL
+        """
+        try:
+            from composio import App
+            
+            app_map = {
+                "xero": App.XERO,
+                "quickbooks": App.QUICKBOOKS,
+                "stripe": App.STRIPE,
+            }
+            
+            if app_name.lower() not in app_map:
+                raise ValueError(f"Unsupported app: {app_name}. Use 'xero', 'quickbooks', or 'stripe'")
+            
+            app = app_map[app_name.lower()]
+            
+            # Get or create entity
+            try:
+                entity = self.client.entities.get(entity_id=entity_id)
+            except:
+                # Create entity if it doesn't exist
+                entity = self.client.entities.create(entity_id=entity_id)
+            
+            # Create connection request
+            try:
+                connection_request = entity.connect_app(
+                    app=app,
+                    redirect_url=redirect_url
+                )
+                
+                return {
+                    "connection_id": getattr(connection_request, 'id', None),
+                    "auth_url": getattr(connection_request, 'auth_url', None),
+                    "status": "pending",
+                    "message": "Connection created. Visit auth_url to complete OAuth flow."
+                }
+            except Exception as connect_error:
+                # Try alternative method
+                logger.warning(f"First connection method failed: {connect_error}, trying alternative")
+                connection_request = self.client.entities.connect(
+                    entity_id=entity_id,
+                    app=app,
+                    redirect_url=redirect_url
+                )
+                
+                return {
+                    "connection_id": getattr(connection_request, 'id', None),
+                    "auth_url": getattr(connection_request, 'auth_url', None),
+                    "status": "pending",
+                    "message": "Connection created. Visit auth_url to complete OAuth flow."
+                }
+        except Exception as e:
+            logger.error(f"Error creating connection: {e}")
+            raise
         
     async def extract_from_xero(
         self, 

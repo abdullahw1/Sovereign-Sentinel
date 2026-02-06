@@ -360,6 +360,61 @@ async def extract_and_analyze(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/composio/connections")
+async def get_composio_connections(entity_id: Optional[str] = None):
+    """
+    Get all available Composio connections.
+    
+    Args:
+        entity_id: Optional entity ID (external user ID)
+    """
+    if not research_agent:
+        raise HTTPException(
+            status_code=503,
+            detail="Research Agent not initialized. Set COMPOSIO_API_KEY in environment."
+        )
+    
+    try:
+        connections = research_agent.get_available_connections(entity_id)
+        return {
+            "connections": connections,
+            "count": len(connections)
+        }
+    except Exception as e:
+        logger.error(f"Error getting connections: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/composio/connect")
+async def create_composio_connection(
+    app: str,  # "xero" | "quickbooks" | "stripe"
+    entity_id: str,
+    redirect_url: Optional[str] = None
+):
+    """
+    Create a new OAuth connection for an app.
+    
+    Args:
+        app: App name ("xero", "quickbooks", "stripe")
+        entity_id: External user ID (unique identifier in your system)
+        redirect_url: Optional redirect URL for OAuth callback
+    """
+    if not research_agent:
+        raise HTTPException(
+            status_code=503,
+            detail="Research Agent not initialized. Set COMPOSIO_API_KEY in environment."
+        )
+    
+    try:
+        result = await research_agent.create_connection(app, entity_id, redirect_url)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error creating connection: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
