@@ -1,0 +1,6 @@
+loanId,borrower,industry,interestType,principalAmount,outstandingBalance,maturityDate,covenants
+L001,Acme Energy,energy,PIK,10000000,12500000,2025-12-31,debt-to-equity < 2.0
+L002,Global Mining,mining,Cash,5000000,5200000,2024-06-30,
+L003,LatAm Telecom,currency,PIK,8000000,9500000,2025-03-15,interest-coverage > 1.5
+L004,Tech Innovations,technology,Hybrid,3000000,3100000,2024-12-31,
+L005,Middle East Oil,energy,PIK,15000000,18000000,2026-01-31,debt-to-equity < 1.8

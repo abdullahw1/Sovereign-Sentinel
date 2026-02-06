@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-02-06T22:01:10.796619Z",
+  "config": {
+    "risk_threshold": 75.0,
+    "pik_exposure_limit": 5000000.0,
+    "auto_execute_enabled": false,
+    "hedge_percentages": {
+      "energy": 15.0,
+      "currency": 20.0,
+      "sovereign": 25.0
+    },
+    "custom_rules": []
+  },
+  "history": [
+    {
+      "override_id": "PD20260206220110",
+      "timestamp": "2026-02-06T22:01:10.796593Z",
+      "field": "risk_threshold",
+      "old_value": 70.0,
+      "new_value": 75.0,
+      "applied_by": "admin",
+      "reason": "**Policy Change Proposal Explanation:**\n\n1. **Detected Pattern:** Analysis of user behavior has revealed a consistent trend of increasing the risk threshold specifically for the energy sector. Over the past evaluations, there have been three overrides of the current threshold, with an average increase of 5.00 points each time. The most recent override occurred on February 6, 2026, indicating a sustained pattern of adjustment.\n\n2. **Rationale for Change:** Increasing the risk threshold from 70.0 to 75.0 aligns with the user's demonstrated preference for a higher tolerance for risk in the energy sector. This adjustment acknowledges the user\u2019s strategic approach and may better accommodate their operational needs and market conditions, potentially leading to more favorable investment opportunities and risk management practices.\n\n3. **Potential Risks or Considerations:** While raising the risk threshold could enhance flexibility and responsiveness to market dynamics, it also introduces the possibility of increased exposure to volatility and losses. Careful monitoring will be necessary to ensure that this higher threshold does not lead to imprudent risk-taking. Additionally, stakeholder communication is essential to manage expectations and ensure alignment with broader organizational risk management policies."
+    }
+  ]
+}

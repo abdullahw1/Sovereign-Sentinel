@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-02-06T22:01:10.796045Z",
+  "entries": [
+    {
+      "entry_id": "RB20260206220059",
+      "timestamp": "2026-02-06T22:00:59.697353Z",
+      "override_type": "risk_threshold",
+      "old_value": 70.0,
+      "new_value": 75.0,
+      "human_rationale": "Energy sector showing increased volatility",
+      "extracted_rule": "IF the energy sector is showing increased volatility THEN increase the risk_threshold value to account for higher risk.",
+      "confidence_score": 85.0,
+      "loan_context": {
+        "industry": "energy",
+        "loan_id": "L001",
+        "pik_toggle": true
+      }
+    },
+    {
+      "entry_id": "RB20260206220102",
+      "timestamp": "2026-02-06T22:01:02.219202Z",
+      "override_type": "risk_threshold",
+      "old_value": 70.0,
+      "new_value": 75.0,
+      "human_rationale": "Override 2",
+      "extracted_rule": "IF the risk threshold in the energy industry is perceived to be too low for current market conditions, THEN increase the risk threshold value to better align with the perceived risk level.",
+      "confidence_score": 85.0,
+      "loan_context": {
+        "industry": "energy"
+      }
+    },
+    {
+      "entry_id": "RB20260206220104",
+      "timestamp": "2026-02-06T22:01:04.488336Z",
+      "override_type": "risk_threshold",
+      "old_value": 71.0,
+      "new_value": 76.0,
+      "human_rationale": "Override 3",
+      "extracted_rule": "IF the risk_threshold value is deemed too low for the current market conditions in the energy industry, THEN increase the risk_threshold value to better align with perceived risks.",
+      "confidence_score": 85.0,
+      "loan_context": {
+        "industry": "energy"
+      }
+    },
+    {
+      "entry_id": "RB20260206220110",
+      "timestamp": "2026-02-06T22:01:10.796026Z",
+      "override_type": "risk_threshold",
+      "old_value": 70.0,
+      "new_value": 75.0,
+      "human_rationale": "Policy diff approved by admin",
+      "extracted_rule": "**Policy Change Proposal Explanation:**\n\n1. **Detected Pattern:** Analysis of user behavior has revealed a consistent trend of increasing the risk threshold specifically for the energy sector. Over the past evaluations, there have been three overrides of the current threshold, with an average increase of 5.00 points each time. The most recent override occurred on February 6, 2026, indicating a sustained pattern of adjustment.\n\n2. **Rationale for Change:** Increasing the risk threshold from 70.0 to 75.0 aligns with the user's demonstrated preference for a higher tolerance for risk in the energy sector. This adjustment acknowledges the user\u2019s strategic approach and may better accommodate their operational needs and market conditions, potentially leading to more favorable investment opportunities and risk management practices.\n\n3. **Potential Risks or Considerations:** While raising the risk threshold could enhance flexibility and responsiveness to market dynamics, it also introduces the possibility of increased exposure to volatility and losses. Careful monitoring will be necessary to ensure that this higher threshold does not lead to imprudent risk-taking. Additionally, stakeholder communication is essential to manage expectations and ensure alignment with broader organizational risk management policies.",
+      "confidence_score": 80.0,
+      "loan_context": null
+    }
+  ]
+}

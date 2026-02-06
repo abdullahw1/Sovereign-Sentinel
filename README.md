@@ -119,9 +119,9 @@ The frontend will be available at `http://localhost:3000`
 ## Next Steps
 
 - Task 2: Implement Forensic Auditor for PIK loan analysis
-- Task 3: Build Policy Brain orchestration with Gemini
+- Task 3: Build Policy Brain orchestration with OpenAI
 - Task 4: Create War Room Dashboard with real-time updates
-- Task 5: Integrate Plivo voice alert system
+- Task 5: Integrate OpenAI voice alert system
 - Task 6: Build Treasury Commander with Composio integration
 - Task 7: Deploy to Render and configure production environment
 

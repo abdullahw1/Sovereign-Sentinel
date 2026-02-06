@@ -1,0 +1,54 @@
+{
+  "loans": [
+    {
+      "loanId": "L001",
+      "borrower": "Acme Energy",
+      "industry": "energy",
+      "interestType": "PIK",
+      "principalAmount": 10000000,
+      "outstandingBalance": 12500000,
+      "maturityDate": "2025-12-31T00:00:00Z",
+      "covenants": ["debt-to-equity < 2.0"]
+    },
+    {
+      "loanId": "L002",
+      "borrower": "Global Mining",
+      "industry": "mining",
+      "interestType": "Cash",
+      "principalAmount": 5000000,
+      "outstandingBalance": 5200000,
+      "maturityDate": "2024-06-30T00:00:00Z",
+      "covenants": []
+    },
+    {
+      "loanId": "L003",
+      "borrower": "LatAm Telecom",
+      "industry": "currency",
+      "interestType": "PIK",
+      "principalAmount": 8000000,
+      "outstandingBalance": 9500000,
+      "maturityDate": "2025-03-15T00:00:00Z",
+      "covenants": ["interest-coverage > 1.5"]
+    },
+    {
+      "loanId": "L004",
+      "borrower": "Tech Innovations",
+      "industry": "technology",
+      "interestType": "Hybrid",
+      "principalAmount": 3000000,
+      "outstandingBalance": 3100000,
+      "maturityDate": "2024-12-31T00:00:00Z",
+      "covenants": []
+    },
+    {
+      "loanId": "L005",
+      "borrower": "Middle East Oil",
+      "industry": "energy",
+      "interestType": "PIK",
+      "principalAmount": 15000000,
+      "outstandingBalance": 18000000,
+      "maturityDate": "2026-01-31T00:00:00Z",
+      "covenants": ["debt-to-equity < 1.8"]
+    }
+  ]
+}

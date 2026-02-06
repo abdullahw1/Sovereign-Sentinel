@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     # API Keys
     you_api_key: str
     openai_api_key: str
+    composio_api_key: Optional[str] = None
     
     # Application Settings
     environment: str = "development"
@@ -22,6 +23,14 @@ class Settings(BaseSettings):
     
     # Risk Score Settings
     risk_threshold: int = 70
+    
+    # Email Notification Settings (optional)
+    smtp_host: Optional[str] = None
+    smtp_port: Optional[int] = None
+    smtp_user: Optional[str] = None
+    smtp_password: Optional[str] = None
+    notification_from_email: Optional[str] = None
+    notification_to_emails: Optional[str] = None  # Comma-separated list
     
     class Config:
         env_file = ".env"
