@@ -121,7 +121,7 @@ Provide a concise summary."""
             }
     
     def _calculate_financial_ratios(self, financial_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Calculate key financial ratios."""
+        """Calculate key financial ratios including 6 priority credit metrics."""
         try:
             # Extract data
             income = financial_data.get('income_statement', {})
@@ -132,32 +132,122 @@ Provide a concise summary."""
             revenue = income.get('total_revenue', 0)
             net_income = income.get('net_income', 0)
             operating_income = income.get('operating_income', 0)
+            ebitda = income.get('ebitda', operating_income + income.get('depreciation', 0))
+            interest_expense = abs(income.get('interest_expense', 0))
             
             current_assets = balance.get('total_current_assets', 0)
             current_liabilities = balance.get('total_current_liabilities', 0)
             total_assets = balance.get('total_assets', 0)
             total_liabilities = balance.get('total_liabilities', 0)
             total_equity = balance.get('total_equity', 0)
+            retained_earnings = balance.get('retained_earnings', 0)
+            working_capital = current_assets - current_liabilities
             
             operating_cash_flow = cashflow.get('net_cash_from_operating', 0)
             
-            # Calculate ratios
+            # Debt service (principal + interest)
+            annual_principal = income.get('principal_payments', total_liabilities * 0.1)  # Estimate 10% annual
+            total_debt_service = annual_principal + interest_expense
+            
+            # === 6 PRIORITY CREDIT METRICS ===
+            
+            # 1. Debt Service Coverage Ratio (DSCR)
+            dscr = (ebitda / total_debt_service) if total_debt_service > 0 else 0
+            dscr_score = (
+                100 if dscr >= 1.50 else
+                80 if dscr >= 1.25 else
+                50 if dscr >= 1.00 else
+                20 if dscr >= 0.80 else 0
+            )
+            
+            # 2. Debt-to-Equity Ratio
+            debt_to_equity = (total_liabilities / total_equity) if total_equity > 0 else 999
+            de_score = (
+                100 if debt_to_equity < 1.0 else
+                80 if debt_to_equity < 1.5 else
+                50 if debt_to_equity < 2.5 else
+                20 if debt_to_equity < 4.0 else 0
+            )
+            
+            # 3. Current Ratio
+            current_ratio = (current_assets / current_liabilities) if current_liabilities > 0 else 0
+            cr_score = (
+                100 if current_ratio >= 2.0 else
+                80 if current_ratio >= 1.5 else
+                50 if current_ratio >= 1.2 else
+                20 if current_ratio >= 1.0 else 0
+            )
+            
+            # 4. Interest Coverage Ratio (ICR)
+            icr = (ebitda / interest_expense) if interest_expense > 0 else 999
+            icr_score = (
+                100 if icr >= 5.0 else
+                80 if icr >= 3.0 else
+                50 if icr >= 2.0 else
+                20 if icr >= 1.5 else 0
+            )
+            
+            # 5. Net Profit Margin
+            net_margin = (net_income / revenue * 100) if revenue > 0 else 0
+            npm_score = (
+                100 if net_margin >= 15 else
+                80 if net_margin >= 10 else
+                50 if net_margin >= 5 else
+                20 if net_margin >= 0 else 0
+            )
+            
+            # 6. Altman Z'-Score (Private Companies)
+            # Z' = 0.717X1 + 0.847X2 + 3.107X3 + 0.420X4 + 0.998X5
+            x1 = working_capital / total_assets if total_assets > 0 else 0
+            x2 = retained_earnings / total_assets if total_assets > 0 else 0
+            x3 = ebitda / total_assets if total_assets > 0 else 0
+            x4 = total_equity / total_liabilities if total_liabilities > 0 else 0
+            x5 = revenue / total_assets if total_assets > 0 else 0
+            
+            z_score = (0.717 * x1) + (0.847 * x2) + (3.107 * x3) + (0.420 * x4) + (0.998 * x5)
+            z_score_interpretation = (
+                "Safe Zone" if z_score > 2.9 else
+                "Grey Zone" if z_score > 1.23 else
+                "Distress Zone"
+            )
+            z_score_score = (
+                100 if z_score > 2.9 else
+                60 if z_score > 1.23 else 20
+            )
+            
+            # Overall Credit Score (weighted average of 6 metrics)
+            overall_credit_score = (
+                dscr_score * 0.25 +
+                de_score * 0.20 +
+                cr_score * 0.15 +
+                icr_score * 0.15 +
+                npm_score * 0.10 +
+                z_score_score * 0.15
+            )
+            
             ratios = {
-                # Profitability
-                "net_profit_margin": (net_income / revenue * 100) if revenue else 0,
+                # === 6 PRIORITY METRICS ===
+                "dscr": round(dscr, 2),
+                "dscr_score": dscr_score,
+                "debt_to_equity": round(debt_to_equity, 2),
+                "de_score": de_score,
+                "current_ratio": round(current_ratio, 2),
+                "cr_score": cr_score,
+                "interest_coverage_ratio": round(icr, 2),
+                "icr_score": icr_score,
+                "net_profit_margin": round(net_margin, 1),
+                "npm_score": npm_score,
+                "altman_z_score": round(z_score, 2),
+                "z_score_interpretation": z_score_interpretation,
+                "z_score_score": z_score_score,
+                "overall_credit_score": round(overall_credit_score, 1),
+                
+                # Additional ratios
                 "operating_margin": (operating_income / revenue * 100) if revenue else 0,
                 "return_on_assets": (net_income / total_assets * 100) if total_assets else 0,
                 "return_on_equity": (net_income / total_equity * 100) if total_equity else 0,
-                
-                # Liquidity
-                "current_ratio": (current_assets / current_liabilities) if current_liabilities else 0,
                 "quick_ratio": ((current_assets - balance.get('inventory', 0)) / current_liabilities) if current_liabilities else 0,
-                
-                # Solvency
-                "debt_to_equity": (total_liabilities / total_equity) if total_equity else 0,
                 "debt_to_assets": (total_liabilities / total_assets) if total_assets else 0,
-                
-                # Cash Flow
                 "operating_cash_flow_ratio": (operating_cash_flow / current_liabilities) if current_liabilities else 0,
                 "cash_flow_to_debt": (operating_cash_flow / total_liabilities) if total_liabilities else 0
             }

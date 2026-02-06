@@ -74,14 +74,20 @@ export default function CompanyAnalysisPanel({ onAgentLog }: CompanyAnalysisPane
       income_statement: {
         total_revenue: 5000000,
         net_income: 408000,
-        operating_income: 550000
+        operating_income: 550000,
+        ebitda: 675000,
+        interest_expense: 45000,
+        depreciation: 125000,
+        principal_payments: 80000
       },
       balance_sheet: {
         total_current_assets: 1490000,
         total_current_liabilities: 863000,
         total_assets: 2020000,
         total_liabilities: 1298000,
-        total_equity: 722000
+        total_equity: 722000,
+        retained_earnings: 712000,
+        inventory: 0
       },
       cash_flow: {
         net_cash_from_operating: 578000
@@ -171,23 +177,73 @@ export default function CompanyAnalysisPanel({ onAgentLog }: CompanyAnalysisPane
             {/* Financial Ratios */}
             {result.financial_ratios && (
               <div className="bg-gray-800 rounded p-3">
-                <p className="font-semibold text-gray-300 mb-2">Financial Ratios</p>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <p className="text-gray-400">Current Ratio</p>
-                    <p className="font-bold">{result.financial_ratios.current_ratio?.toFixed(2)}</p>
+                <p className="font-semibold text-gray-300 mb-3">📊 6 Priority Credit Metrics</p>
+                
+                {/* Overall Credit Score */}
+                <div className="mb-3 p-2 bg-gray-900 rounded">
+                  <p className="text-xs text-gray-400">Overall Credit Score</p>
+                  <p className={`text-2xl font-bold ${
+                    result.financial_ratios.overall_credit_score >= 80 ? 'text-green-400' :
+                    result.financial_ratios.overall_credit_score >= 60 ? 'text-yellow-400' :
+                    result.financial_ratios.overall_credit_score >= 40 ? 'text-orange-400' : 'text-red-400'
+                  }`}>
+                    {result.financial_ratios.overall_credit_score}/100
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">1. DSCR</p>
+                    <p className="font-bold">{result.financial_ratios.dscr}x</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.dscr_score >= 80 ? 'text-green-400' :
+                      result.financial_ratios.dscr_score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>Score: {result.financial_ratios.dscr_score}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-400">Debt-to-Equity</p>
-                    <p className="font-bold">{result.financial_ratios.debt_to_equity?.toFixed(2)}</p>
+                  
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">2. Debt-to-Equity</p>
+                    <p className="font-bold">{result.financial_ratios.debt_to_equity}x</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.de_score >= 80 ? 'text-green-400' :
+                      result.financial_ratios.de_score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>Score: {result.financial_ratios.de_score}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-400">Net Profit Margin</p>
-                    <p className="font-bold">{result.financial_ratios.net_profit_margin?.toFixed(1)}%</p>
+                  
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">3. Current Ratio</p>
+                    <p className="font-bold">{result.financial_ratios.current_ratio}</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.cr_score >= 80 ? 'text-green-400' :
+                      result.financial_ratios.cr_score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>Score: {result.financial_ratios.cr_score}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-400">ROE</p>
-                    <p className="font-bold">{result.financial_ratios.return_on_equity?.toFixed(1)}%</p>
+                  
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">4. Interest Coverage</p>
+                    <p className="font-bold">{result.financial_ratios.interest_coverage_ratio}x</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.icr_score >= 80 ? 'text-green-400' :
+                      result.financial_ratios.icr_score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>Score: {result.financial_ratios.icr_score}</p>
+                  </div>
+                  
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">5. Net Profit Margin</p>
+                    <p className="font-bold">{result.financial_ratios.net_profit_margin}%</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.npm_score >= 80 ? 'text-green-400' :
+                      result.financial_ratios.npm_score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>Score: {result.financial_ratios.npm_score}</p>
+                  </div>
+                  
+                  <div className="p-2 bg-gray-900 rounded">
+                    <p className="text-gray-400">6. Altman Z-Score</p>
+                    <p className="font-bold">{result.financial_ratios.altman_z_score}</p>
+                    <p className={`text-xs ${
+                      result.financial_ratios.z_score_interpretation === 'Safe Zone' ? 'text-green-400' :
+                      result.financial_ratios.z_score_interpretation === 'Grey Zone' ? 'text-yellow-400' : 'text-red-400'
+                    }`}>{result.financial_ratios.z_score_interpretation}</p>
                   </div>
                 </div>
               </div>
