@@ -55,8 +55,13 @@ async def lifespan(app: FastAPI):
     # Initialize Research Agent (Composio)
     if settings.composio_api_key:
         try:
-            research_agent = ResearchAgent(composio_api_key=settings.composio_api_key)
+            research_agent = ResearchAgent(
+                composio_api_key=settings.composio_api_key,
+                default_entity_id=settings.composio_entity_id
+            )
             logger.info("Research Agent (Composio) initialized")
+            if settings.composio_entity_id:
+                logger.info(f"Using default Composio entity ID: {settings.composio_entity_id}")
         except Exception as e:
             logger.warning(f"Failed to initialize Research Agent: {e}")
     else:

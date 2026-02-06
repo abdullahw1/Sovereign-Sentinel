@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     # API Keys
     you_api_key: str
     openai_api_key: str
-    composio_api_key: Optional[str] = None  # New
+    composio_api_key: Optional[str] = None
+    composio_entity_id: Optional[str] = None  # Default entity ID for Composio
     
     # Application Settings
     environment: str = "development"

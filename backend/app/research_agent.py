@@ -20,25 +20,28 @@ logger = logging.getLogger(__name__)
 class ResearchAgent:
     """Agent that extracts financial data from multiple sources using Composio."""
     
-    def __init__(self, composio_api_key: str):
+    def __init__(self, composio_api_key: str, default_entity_id: Optional[str] = None):
         """Initialize Research Agent with Composio client."""
         if not COMPOSIO_AVAILABLE:
             raise ImportError("Composio is not installed. Install with: pip install composio-core")
         self.client = ComposioClient(api_key=composio_api_key)
         self.toolset = ComposioToolset()
         self.api_key = composio_api_key
+        self.default_entity_id = default_entity_id
     
     def get_available_connections(self, entity_id: Optional[str] = None) -> List[Dict]:
         """
         Get all available connections for the entity.
         
         Args:
-            entity_id: Optional entity ID. If None, uses default entity.
+            entity_id: Optional entity ID. If None, uses default entity from config.
             
         Returns:
             List of connection dictionaries
         """
         try:
+            # Use provided entity_id, or default from config, or None
+            entity_id = entity_id or self.default_entity_id
             connections_list = []
             
             if entity_id:
