@@ -46,6 +46,24 @@ Banks lose billions to "shadow defaults" - companies that haven't officially def
 
 ---
 
+## � Quick Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+### One-Click Deployment
+1. Click the button above or go to [Render Dashboard](https://dashboard.render.com/)
+2. Connect your GitHub repository
+3. Render will auto-detect `render.yaml` and create both services
+4. Add environment variables:
+   - `OPENAI_API_KEY` - Your OpenAI API key
+   - `YOU_API_KEY` - Your You.com API key
+5. Wait 5-10 minutes for deployment
+6. Visit your frontend URL and start analyzing!
+
+**See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.**
+
+---
+
 ## 📊 6 Priority Credit Metrics
 
 Sovereign Sentinel calculates industry-standard credit scores:
